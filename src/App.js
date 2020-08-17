@@ -4,12 +4,15 @@ import './styles/main.scss';
 import { prettifyNumber,sortCases } from './components/Util';
 import InfoBox from './components/InfoBox';
 import Table from './components/Table';
+import LineGraph from './components/LineGraph';
 
 const App = () => {
 	const [country, setCountry] = useState('worldwide'); //Yang ini cuma satu
 	const [countries, setCountries] = useState([]); //Yang ini semua
 	const [countryInfo, setCountryInfo] = useState({});
 	const [tableData, setTableData] = useState([]);
+	const [caseType, setCaseType] = useState('cases');
+	const [countryName, setCountryName] = useState('worldwide');
 
 	// Panggil data untuk worldwide waktu pertama kali loading 
 	useEffect(() => {
@@ -44,8 +47,9 @@ const App = () => {
 
 	const onCountryChange = async (e) =>{
 		const dataTarget = e.target.value;
-
+		setCountryName(e._targetInst.child.child.memoizedProps);
 		setCountry(dataTarget);
+		setCaseType('cases');
 
 		const url = 
 			dataTarget === "worldwide"? 
@@ -60,6 +64,9 @@ const App = () => {
 			})
 	}
 
+	const changeCases = (e) =>{
+		setCaseType(e.target.id);
+	}
 
 	return (
 		<div className="app">
@@ -86,18 +93,24 @@ const App = () => {
 				<div className="app-info-boxes">
 					<InfoBox 
 						title={"Coronavirus Cases"}
+						id={"cases"}
 						cases={prettifyNumber(countryInfo.todayCases)}
 						total={prettifyNumber(countryInfo.cases)}
+						changeCases = {changeCases}
 					/>
 					<InfoBox 
 						title={"Recovered"}
+						id={"recovered"}
 						cases={prettifyNumber(countryInfo.todayRecovered)}
 						total={prettifyNumber(countryInfo.recovered)}
+						changeCases = {changeCases}
 					/>
 					<InfoBox 
 						title={"Deaths"}
+						id={"deaths"}
 						cases={prettifyNumber(countryInfo.todayDeaths)}
 						total={prettifyNumber(countryInfo.deaths)}
+						changeCases = {changeCases}
 					/>
 				</div>
 			</div>
@@ -106,6 +119,8 @@ const App = () => {
 			<div className="app-right">
 				<h3>Live Cases by Country</h3>
 				<Table countries={tableData}/>
+				<h3>{countryName} new {caseType}</h3>
+				<LineGraph caseType={caseType} country={country}/>
 			</div>
 		</div>
 	);

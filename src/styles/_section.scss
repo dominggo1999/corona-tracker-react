@@ -21,6 +21,8 @@
 
 		.app-stats{
 			box-shadow :  none;
+			cursor: pointer;
+			background: #F3F2F8;
 		}
 	}
 }
@@ -29,7 +31,7 @@
 	padding: 10px 40px;
 	.app-table{
 		overflow-y: scroll;
-		height: 500px; 
+		height: 450px; 
 
 		table{
 			width: 100%;
@@ -57,4 +59,8 @@
 	.app-right{
 		padding: 0;
 	}
+}
+
+.pointer-event-none{
+	pointer-events: none;
 }

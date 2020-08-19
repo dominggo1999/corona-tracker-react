@@ -5,6 +5,8 @@ import { prettifyNumber,sortCases } from './components/Util';
 import InfoBox from './components/InfoBox';
 import Table from './components/Table';
 import LineGraph from './components/LineGraph';
+import Map from './components/Map';
+import 'leaflet/dist/leaflet.css';
 
 const App = () => {
 	const [country, setCountry] = useState('worldwide'); //Yang ini cuma satu
@@ -13,6 +15,9 @@ const App = () => {
 	const [tableData, setTableData] = useState([]);
 	const [caseType, setCaseType] = useState('cases');
 	const [countryName, setCountryName] = useState('worldwide');
+	const [mapCenter, setMapCenter] = useState([38.272689,-35.859375]);
+	const [mapZoom, setMapZoom] = useState(3);
+	const [mapCountries, setMapCountries] = useState([]);
 
 	// Panggil data untuk worldwide waktu pertama kali loading 
 	useEffect(() => {
@@ -39,12 +44,14 @@ const App = () => {
 
 					setTableData(sortedData);
 					setCountries(countries);
+					setMapCountries(data);
 				})
 		}	
 
 		getCountriesData();	
 	}, [])
 
+	// Kalau pilih negara
 	const onCountryChange = async (e) =>{
 		const dataTarget = e.target.value;
 		setCountryName(e._targetInst.child.child.memoizedProps);
@@ -64,6 +71,7 @@ const App = () => {
 			})
 	}
 
+	//Ganti case 
 	const changeCases = (e) =>{
 		setCaseType(e.target.id);
 	}
@@ -113,14 +121,22 @@ const App = () => {
 						changeCases = {changeCases}
 					/>
 				</div>
+
+				<Map
+					caseType={caseType}
+					mapZoom ={mapZoom}
+					mapCountries={mapCountries}
+					mapCenter={mapCenter}
+				/>
+
 			</div>
 
 
 			<div className="app-right">
-				<h3>Live Cases by Country</h3>
-				<Table countries={tableData}/>
 				<h3>{countryName} new {caseType}</h3>
 				<LineGraph caseType={caseType} country={country}/>
+				<h3>Live Cases by Country</h3>
+				<Table countries={tableData}/>
 			</div>
 		</div>
 	);

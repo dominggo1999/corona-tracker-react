@@ -40,7 +40,8 @@ const options = {
         ticks: {
           // Include a dollar sign in the ticks
           callback: function (value, index, values) {
-            return numeral(value).format("0a");
+          	let format = value>1000?numeral(value).format('0.0a'):value;
+          	return format
           },
         },
       },
